@@ -1,0 +1,408 @@
+#include "includes.h"//添加外部各种头文件
+//ALIENTEK Mini STM32开发板范例代码2
+//按键输入实验
+//技术支持：www.openedv.com
+//广州市星翼电子科技有限公司
+
+
+
+//void SD_Read_Sectorx(u32 sec)
+//{
+//  u8 *buf;
+//  u16 i;
+//  buf=mymalloc(512);              //申请内存
+//  if(SD_ReadDisk(buf,sec,1)==0)   //读取0扇区的内容
+//  {
+//      delay_ms(1000);
+//      SD_WriteDisk(buf,2,1);  //读取0扇区的内容
+//
+//      printf("SECTOR 0 DATA:\r\n");
+//      for(i=0;i<512;i++)printf("%x ",buf[i]);//打印sec扇区数据
+//      printf("\r\nDATA ENDED\r\n");
+//
+//  }
+//  myfree(buf);//释放内存
+//}
+
+
+// int main(void)
+// {
+//  u8 t=3;             //键值
+//  u32 sd_size;        //SD容量
+//  u32  sd ;         //SD指令返回值
+//  u32 total,free;   /* 磁盘容量*/
+//  FRESULT result;   /* 文件操作结果 */
+//  FIL fnew;         /* 文件对象 */
+//  uint32_t fil_size=0;  /* 文件指针 */
+//  UINT fnum;        /* 文件成功读写数量 */
+////    uint8_t WriteBuffer[50] = "Mr'K制作与2022年2月7日\r\n";
+//  uint8_t WriteBuffer[] = "SD卡程序搞了好多天终于写成功了！\r\n";
+//  u8 readbuffer[100];
+//
+//  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);// 设置中断优先级分组2
+//  delay_init();           //延时函数初始化
+//  USART1_Init(115200);  //uart_init(9600);          //串口初始化为9600
+//
+//   printf("111111111111=");
+//////////////////---SD卡初始化---//////////////////////////////////////
+//   mem_init();                //初始化内存池
+//   sd=SD_Initialize();        //SPI SD卡 初始化
+
+//   printf("SD_Initialize=");
+//   printf("%u \r\n",sd);
+//   delay_ms(1000);
+//////////////////---读取SD卡容量---//////////////////////////////////////
+//   sd=SD_WaitReady();  //等待卡准备好//返回值:0,
+//  if (sd==0)
+//   {
+//      sd_size=SD_GetSectorCount();//得到扇区数
+//    sd=sd_size>>11;
+//      printf("sd_size=");
+//    printf("%u \r\n",sd);
+//   }
+//
+//////////////////---申请内存    挂载SD卡---//////////////////////////////////////
+//   exfuns_init();             //挂载SD卡前，必须先为fatfs相关变量申请内存
+//   sd=f_mount(fs[0],"0:",1); //挂载SD卡
+//   printf("f_mount=");
+//   printf("%u \r\n",sd);
+//   delay_ms(1000);
+//
+//////////////////---得到磁盘剩余容量---//////////////////////////////////////
+//   sd=exf_getfree("0",&total,&free);
+//   printf("exf_getfree=");
+//   printf("%u \r\n",sd);
+//   total=total>>10;
+//   printf("total=");
+//   printf("%u \r\n",total);
+//   free=free>>10;
+//   printf("free=");
+//   printf("%u \r\n",free);
+
+//
+//   while(1)
+//   {
+//       memset(readbuffer,0,sizeof(readbuffer));
+//       result=f_open(&fnew,"0:/mr'k.txt",FA_READ);
+//      f_lseek(&fnew,fil_size);
+
+//   f_read(&fnew,readbuffer,35,&fnum);
+//   f_close(&fnew);
+//
+//   printf("%s\r\n",readbuffer);
+//   delay_ms(1000);
+//   delay_ms(100);
+//       fil_size+=36;
+//   }
+
+//
+//  while(1)
+//  {
+//  //  t=KEY_Scan(0);      //得到键值
+//      switch(t)
+//      {
+//          case 1:
+//             SD_Read_Sectorx(0);//KEY0按,读取SD卡扇区0的内容
+//              break;
+//          case 2:
+////               sd=SD_WaitReady();
+////                    if (sd==0)
+////                     {
+////                        sd_size=SD_GetSectorCount();//得到扇区数
+////                        printf("sd_size=");
+////                        printf("%u \r\n",sd_size);
+////                        sd=sd_size>>11;
+////                        printf("sd_=");
+////                        printf("%u \r\n",sd);
+////                     }
+////                break;
+//          case 3:
+//
+//
+//           result=f_open(&fnew,"0:/ttt.txt", FA_OPEN_ALWAYS|FA_WRITE);        //打开/创建文件对象
+//                  if (result == FR_OK)
+//               {
+//                      printf("f_open_OK=");
+//                      printf("%u \r\n",result);
+//               }
+//              else
+//               {
+//                      printf("f_open_NG=");
+//                      printf("%u \r\n",result);
+//               }
+//
+//                  fil_size = f_size(&fnew);  //获得文件大小
+//
+//                  printf("fil_size=");
+//                  printf("%u \r\n",fil_size);
+//
+//                  result = f_lseek(&fnew,fil_size);//文件对象的读写指针移动到文件结束处
+//
+//               printf("f_lseek=");
+//                  printf("%u \r\n",result);
+//
+//               result = f_write(&fnew, WriteBuffer , sizeof(WriteBuffer), &fnum);//从文件内数据的最后写入字符串
+//
+//                  printf("f_write=");
+//                  printf("%u \r\n",result);
+//
+//
+//              delay_ms(1000);
+//               f_close(&fnew);  //关闭message.txt
+//              break;
+//          default:
+//              delay_ms(10);
+//      }
+//      delay_ms(100);
+//  }
+//
+//}
+
+
+
+
+
+int main(void)
+{
+    u8 t;
+    u8 readbuff[10] = {0};
+    char at_buf[10] = {0};
+    u8 *at = NULL;
+    u8 dat;
+    u8 data;
+    int add = 0;
+    u32 cnt = 0;
+    SCB->AIRCR = 0X05FA0500; //配置为中断组2，其中前面的0X05FA必须写上去，不然不能配置后面的中断组
+    //一个工程只能配置一次中断组，不然会出现意想不到的惊喜和意外，可以放在任何位置
+
+//      USART2_Init();
+    delay_init();
+
+    KEY_Init();
+    Led_Init();
+
+    Usart1_Init(115200);
+//      usart3_init(9600);
+    printf("hello world\r\n");
+
+
+
+    //OLED_ShowString(0,0,(u8*)"777",16);
+
+//      AT24C02_I2C_Configuration();
+//      at=AT24C04_Read_Page(0,0,5);
+//      printf("上电次%s数\r\n",at);
+//      add=atoi((char *)at)+1;
+//      sprintf(at_buf,"%d",add);
+//      AT24C04_Write_Page(0,0,(u8*)at_buf,5);
+//      delay_ms(10);
+//
+    W25Q64_Init();
+//      W25Q64_Erase_Chip();
+    delay_ms(10);
+//      W25Q64_Write((u8 *)"4444",0,10);
+    delay_ms(10);
+//      W25Q64_Read(readbuff,0,10);
+    delay_ms(10);
+    printf("read=%s\r\n", readbuff);
+//
+//
+    OLED_Init();
+    OLED_Clear();
+
+    delay_ms(10);
+//      OLED_ShowStr(0,0,"666");
+    //USART_SendString(USART2, (u8 *)"AT+LED=OFF\r\n");
+//   OLED_ShowChineseString(0, 0, (u8 *)"黄锦钊777好猛");
+
+////    printf("read111\r\n");
+
+//  printf("read=%s\r\n",readbuff);
+//
+//
+//      while(1);
+//printf("hello world111\r\n");
+
+//while(1)
+//{
+//      data=USART_RecByte(USART1);
+//      W25Q64_Write_NoCheck(&data,cnt++,1);
+//}
+
+//OLED_ShowString(0,0,"666",16);
+//OLED_Refresh();
+//          LED1 = 0;
+//            LED2 = 0;
+//            LED3 = 0;
+//            LED4 = 0;
+
+
+//Speech_algorithm(1);
+
+    delay_ms(10);
+    OLED_ShowStr(40, 0, "44444");
+    OLED_ShowCH(0, 4, "孟");
+    printf("已进入循环\r\n");
+    while (1)
+    {
+
+        if (KEY1 == 0)
+        {
+            delay_ms(100);
+            printf("进1\r\n");
+            LED1 = 0;
+            LED2 = 0;
+            LED3 = 0;
+            LED4 = 0;
+        }
+        if (KEY2 == 0)
+        {
+            delay_ms(100);
+            printf("进2\r\n");
+            LED1 = 1;
+            LED2 = 1;
+            LED3 = 1;
+            LED4 = 1;
+        }
+        if (KEY3 == 0)
+        {
+            delay_ms(100);
+            printf("进3\r\n");
+        }
+
+
+//                  OLED_ShowCH(0,4,"孟");
+//              delay_ms(1000);
+//              OLED_Clear();
+//              OLED_ShowCH(0,4,"黄");
+//              delay_ms(1000);
+//              OLED_Clear();
+//              printf("11111\r\n");
+////                dat=Usart1_Read_byte();
+////                W25Q64_Write_NoCheck(&dat,cnt++,1);
+    }
+
+
+    while (1)
+    {
+
+
+
+//          printf("hello world\r\n");
+
+
+//          if(KEY1==0)
+//          {
+//              delay_ms(100);
+//              printf("进1\r\n");
+//                        LED1 = 0;
+//            LED2 = 0;
+//            LED3 = 0;
+//            LED4 = 0;
+//          }
+//                      if(KEY2==0)
+//          {
+//              delay_ms(100);
+//              printf("进2\r\n");
+//                        LED1 = 1;
+//            LED2 = 1;
+//            LED3 = 1;
+//            LED4 = 1;
+//          }
+//                      if(KEY3==0)
+//          {
+//              delay_ms(100);
+//              printf("进3\r\n");
+//          }
+//                      if(KEY4==0)
+//          {
+//              delay_ms(100);
+//              printf("进4\r\n");
+//          }
+//                      if(KEY5==0)
+//          {
+//              delay_ms(100);
+//              printf("进5\r\n");
+//          }
+//                      if(KEY6==0)
+//          {
+//              delay_ms(100);
+//              printf("进6\r\n");
+//          }
+
+//          printf("进1\r\n");
+//        if (usart1_type.usart1_readFlag&0x80)
+//        {
+//            if (!strcasecmp((char *)usart1_type.usart1_readBuf, "1\r\n"))
+//            {
+//                printf("进1\r\n");
+//                USART_SendString(USART2, (u8 *)"AT+LED=OFF\r\n");
+//            }
+//            else if (!strcasecmp((char *)usart1_type.usart1_readBuf, "2\r\n"))
+//            {
+//                printf("进2\r\n");
+//                USART_SendString(USART2, (u8 *)"AT+LED=ON\r\n");
+//            }
+//            else if (!strcasecmp((char *)usart1_type.usart1_readBuf, "3\r\n"))
+//            {
+//                printf("进3\r\n");
+//                USART_SendString(USART2, (u8 *)"AT+BEEP=OFF\r\n");
+//            }
+//            else if (!strcasecmp((char *)usart1_type.usart1_readBuf, "4\r\n"))
+//            {
+//                printf("进4\r\n");
+//                USART_SendString(USART2, (u8 *)"AT+BEEP=ON\r\n");
+//            }
+//                   else if (!strcasecmp((char *)usart1_type.usart1_readBuf, "5\r\n"))
+//            {
+//                printf("进5\r\n");
+//                USART_SendString(USART2, (u8 *)"AT+SCAN=STOP\r\n");
+//            }
+//                      else if (!strcasecmp((char *)usart1_type.usart1_readBuf, "6\r\n"))
+//            {
+//                printf("进6\r\n");
+//                USART_SendString(USART2, (u8 *)"AT+MODE=REPEAT\r\n");
+//            }
+//                      else if (!strcasecmp((char *)usart1_type.usart1_readBuf, "7\r\n"))
+//            {
+//                printf("进7\r\n");
+//                USART_SendString(USART2, (u8 *)"AT+TRIG=CMD\r\n");
+//            }
+//                      else if (!strcasecmp((char *)usart1_type.usart1_readBuf, "8\r\n"))
+//            {
+//                printf("进8\r\n");
+//                USART_SendString(USART2, (u8 *)"AT+SCAN=START\r\n");
+//            }
+//            memset(&usart1_type, 0, sizeof(usart1_type));
+//        }
+//
+//
+//          if (usart2_type.usart2_readFlag & 0x80)
+//          {
+//                      if (!strcasecmp((char *)usart2_type.usart2_readBuf, "1\r\n"))
+//                  {
+//                          printf("进1111\r\n");
+//                          USART_SendString(USART2, (u8 *)"AT+LED=OFF\r\n");
+//                  }
+//                  if (!strcasecmp((char *)usart2_type.usart2_readBuf, "2\r\n"))
+//                  {
+//                          printf("进2222\r\n");
+//                          USART_SendString(USART2, (u8 *)"AT+LED=OFF\r\n");
+//                  }
+//                  if (!strcasecmp((char *)usart2_type.usart2_readBuf, "3\r\n"))
+//                  {
+//                          printf("进3333\r\n");
+//                          USART_SendString(USART2, (u8 *)"AT+LED=OFF\r\n");
+//                  }
+
+//                  if (!strcasecmp((char *)usart2_type.usart2_readBuf, "4\r\n"))
+//                  {
+//                          printf("进4444\r\n");
+//                          USART_SendString(USART2, (u8 *)"AT+LED=OFF\r\n");
+//                  }
+//                  memset(&usart2_type, 0, sizeof(usart2_type));
+//                  usart2_type.usart2_readFlag=0;
+//          }
+
+    }
+}
